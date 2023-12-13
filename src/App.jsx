@@ -1,16 +1,23 @@
 import React from 'react';
 import './App.scss';
 
-// import usersFromServer from './api/users';
-// import categoriesFromServer from './api/categories';
-// import productsFromServer from './api/products';
+import usersFromServer from './api/users';
+import categoriesFromServer from './api/categories';
+import productsFromServer from './api/products';
 
-// const products = productsFromServer.map((product) => {
-//   const category = null; // find by product.categoryId
-//   const user = null; // find by category.ownerId
+const products = productsFromServer.map((product) => {
+  const category
+  = categoriesFromServer.find(el => el.id === product.categoryId); // find by product.categoryId
+  const user = usersFromServer.find(usr => usr.id === category.ownerId); // find by category.ownerId
 
-//   return null;
-// });
+  return {
+    ...product,
+    category: category.title,
+    categoryIcon: category.icon,
+    userName: user.name,
+    userSex: user.sex,
+  };
+});
 
 export const App = () => (
   <div className="section">
@@ -131,114 +138,46 @@ export const App = () => (
       </div>
 
       <div className="box table-container">
-        <p data-cy="NoMatchingMessage">
-          No products matching selected criteria
-        </p>
-
         <table
           data-cy="ProductTable"
           className="table is-striped is-narrow is-fullwidth"
         >
           <thead>
             <tr>
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  ID
-
-                  <a href="#/">
-                    <span className="icon">
-                      <i data-cy="SortIcon" className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Product
-
-                  <a href="#/">
-                    <span className="icon">
-                      <i data-cy="SortIcon" className="fas fa-sort-down" />
-                    </span>
-                  </a>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  Category
-
-                  <a href="#/">
-                    <span className="icon">
-                      <i data-cy="SortIcon" className="fas fa-sort-up" />
-                    </span>
-                  </a>
-                </span>
-              </th>
-
-              <th>
-                <span className="is-flex is-flex-wrap-nowrap">
-                  User
-
-                  <a href="#/">
-                    <span className="icon">
-                      <i data-cy="SortIcon" className="fas fa-sort" />
-                    </span>
-                  </a>
-                </span>
-              </th>
+              <th>ID</th>
+              <th>Product</th>
+              <th>Category</th>
+              <th>User</th>
             </tr>
           </thead>
-
           <tbody>
-            <tr data-cy="Product">
-              <td className="has-text-weight-bold" data-cy="ProductId">
-                1
-              </td>
-
-              <td data-cy="ProductName">Milk</td>
-              <td data-cy="ProductCategory">🍺 - Drinks</td>
-
-              <td
-                data-cy="ProductUser"
-                className="has-text-link"
-              >
-                Max
-              </td>
-            </tr>
-
-            <tr data-cy="Product">
-              <td className="has-text-weight-bold" data-cy="ProductId">
-                2
-              </td>
-
-              <td data-cy="ProductName">Bread</td>
-              <td data-cy="ProductCategory">🍞 - Grocery</td>
-
-              <td
-                data-cy="ProductUser"
-                className="has-text-danger"
-              >
-                Anna
-              </td>
-            </tr>
-
-            <tr data-cy="Product">
-              <td className="has-text-weight-bold" data-cy="ProductId">
-                3
-              </td>
-
-              <td data-cy="ProductName">iPhone</td>
-              <td data-cy="ProductCategory">💻 - Electronics</td>
-
-              <td
-                data-cy="ProductUser"
-                className="has-text-link"
-              >
-                Roma
-              </td>
-            </tr>
+            {products.map(product => (
+              <tr data-cy="Product" key={product.id}>
+                <td
+                  className="has-text-weight-bold"
+                  data-cy="ProductId"
+                >
+                  {product.id}
+                </td>
+                <td data-cy="ProductName">{product.name}</td>
+                <td data-cy="ProductCategory">
+                  <span className="icon-text">
+                    <span className="icon">{product.categoryIcon}</span>
+                    <span>
+                      -&nbsp;
+                      {product.category}
+                    </span>
+                  </span>
+                </td>
+                <td
+                  data-cy="ProductUser"
+                  className={product.userSex === 'm'
+                    ? 'has-text-link' : 'has-text-danger'}
+                >
+                  {product.userName}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
