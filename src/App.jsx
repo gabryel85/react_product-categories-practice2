@@ -8,6 +8,7 @@ import productsFromServer from './api/products';
 export const App = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [searchValue, setSearchValue] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState(new Set());
 
   const products = productsFromServer.map((product) => {
     const category
@@ -24,7 +25,9 @@ export const App = () => {
     };
   }).filter(product => (selectedUserId === null
     || product.userId === selectedUserId)
-    && product.name.includes(searchValue));
+    && product.name.includes(searchValue)
+    && (selectedCategories.size === 0
+    || selectedCategories.has(product.categoryId)));
 
   const handleFilterChange = (userId) => {
     setSelectedUserId(userId);
@@ -41,6 +44,25 @@ export const App = () => {
   const resetAllFilters = () => {
     setSelectedUserId(null);
     setSearchValue('');
+    setSelectedCategories(new Set());
+  };
+
+  const resetCategoryFilter = () => {
+    setSelectedCategories(new Set());
+  };
+
+  const categoryFilter = (categoryId) => {
+    setSelectedCategories((prev) => {
+      const newCategories = new Set(prev);
+
+      if (newCategories.has(categoryId)) {
+        newCategories.delete(categoryId);
+      } else {
+        newCategories.add(categoryId);
+      }
+
+      return newCategories;
+    });
   };
 
   return (
@@ -106,12 +128,25 @@ export const App = () => {
               <a
                 href="#/"
                 data-cy="AllCategories"
-                className="button is-success mr-6 is-outlined"
+                className={`button mr-6 ${selectedCategories.size === 0 ? '' : 'is-outlined'}`}
+                onClick={resetCategoryFilter}
               >
                 All
               </a>
 
-              <a
+              {categoriesFromServer.map(category => (
+                <a
+                  key={category.id}
+                  data-cy="Category"
+                  className={`button mr-2 my-1 ${selectedCategories.has(category.id) ? 'is-info' : ''}`}
+                  href="#/"
+                  onClick={() => categoryFilter(category.id)}
+                >
+                  {category.title}
+                </a>
+              ))}
+
+              {/* <a
                 data-cy="Category"
                 className="button mr-2 my-1 is-info"
                 href="#/"
@@ -140,7 +175,7 @@ export const App = () => {
                 href="#/"
               >
                 Category 4
-              </a>
+              </a> */}
             </div>
 
             <div className="panel-block">
