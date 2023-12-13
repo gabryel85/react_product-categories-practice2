@@ -19,6 +19,7 @@ import productsFromServer from './api/products';
 export const App = () => {
   const [filterById, setFilterById] = useState('');
   const [filterByCategory, setFilterByCategory] = useState('');
+  const [inputValue, setInputValue] = useState('');
 
   const onFilterName = (name) => {
     setFilterById(name);
@@ -34,6 +35,10 @@ export const App = () => {
 
   const resetFilterByCategory = () => {
     setFilterByCategory('');
+  };
+
+  const handlerInput = (event) => {
+    setInputValue(event.target.value);
   };
 
   return (
@@ -59,7 +64,8 @@ export const App = () => {
                   type="text"
                   className="input"
                   placeholder="Search"
-                  value=""
+                  value={inputValue}
+                  onChange={handlerInput}
                 />
 
                 <span className="icon is-left">

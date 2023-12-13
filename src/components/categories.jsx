@@ -7,14 +7,16 @@ export const Categories = (
     onFilterCategory(id);
   };
 
+  const INITIAL_VALUE = '';
+
   return (
     <div className="panel-block is-flex-wrap-wrap">
       <a
         href="#/"
         data-cy="AllCategories"
-        className={filterByCategory === ''
-          ? 'button is-success mr-6 is-outlined'
-          : 'button is-success mr-6'}
+        className={filterByCategory === INITIAL_VALUE
+          ? 'button is-success mr-6'
+          : 'button is-success mr-6 is-outlined'}
         onClick={() => resetFilterByCategory}
       >
         All
