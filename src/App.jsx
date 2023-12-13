@@ -38,6 +38,11 @@ export const App = () => {
     setSearchValue('');
   };
 
+  const resetAllFilters = () => {
+    setSelectedUserId(null);
+    setSearchValue('');
+  };
+
   return (
     <div className="section">
       <div className="container">
@@ -143,6 +148,7 @@ export const App = () => {
                 data-cy="ResetAllButton"
                 href="#/"
                 className="button is-link is-outlined is-fullwidth"
+                onClick={resetAllFilters}
               >
                 Reset all filters
               </a>
