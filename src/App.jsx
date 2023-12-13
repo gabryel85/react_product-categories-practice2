@@ -7,6 +7,7 @@ import productsFromServer from './api/products';
 
 export const App = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [searchValue, setSearchValue] = useState('');
 
   const products = productsFromServer.map((product) => {
     const category
@@ -21,11 +22,20 @@ export const App = () => {
       userSex: user.sex,
       userId: user.id,
     };
-  }).filter(product => selectedUserId === null
-    || product.userId === selectedUserId);
+  }).filter(product => (selectedUserId === null
+    || product.userId === selectedUserId)
+    && product.name.includes(searchValue));
 
   const handleFilterChange = (userId) => {
     setSelectedUserId(userId);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  const clearSearch = () => {
+    setSearchValue('');
   };
 
   return (
@@ -65,21 +75,25 @@ export const App = () => {
                   type="text"
                   className="input"
                   placeholder="Search"
-                  value="qwe"
+                  value={searchValue}
+                  onChange={handleSearchChange}
                 />
 
                 <span className="icon is-left">
                   <i className="fas fa-search" aria-hidden="true" />
                 </span>
 
+                {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+                {searchValue && (
                 <span className="icon is-right">
-                  {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
                   <button
                     data-cy="ClearButton"
                     type="button"
                     className="delete"
+                    onClick={clearSearch}
                   />
                 </span>
+                )}
               </p>
             </div>
 
